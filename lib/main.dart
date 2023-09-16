@@ -38,7 +38,12 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void whereToGo() {
-    Timer(Duration(seconds: 2), () {});
+    Timer(Duration(seconds: 2), () {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (BuildContext context) => HomePage()),
+      );
+    });
   }
 
   @override
