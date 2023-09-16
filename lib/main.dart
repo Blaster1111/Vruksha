@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:vruksha/home_page.dart';
 
@@ -12,22 +14,62 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      routes: {},
-      home: HomePage(),
+      routes: {
+        "/home_page": (context) => HomePage(),
+        "/splash_screen": (context) => SplashScreen(),
+      },
+      home: SplashScreen(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    whereToGo();
+  }
+
+  void whereToGo() {
+    Timer(Duration(seconds: 2), () {});
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return Scaffold(
+      body: Container(
+        color: Colors.grey.shade300,
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                height: MediaQuery.of(context).size.height * 0.35,
+                child: Image.asset('assets/images/vruksha_icon.png'),
+              ),
+              Container(
+                height: MediaQuery.of(context).size.height * 0.35,
+                child: Text(
+                  'Vrukshaà',
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 25,
+                      fontWeight: FontWeight.w400,
+                      fontStyle: FontStyle.italic),
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
