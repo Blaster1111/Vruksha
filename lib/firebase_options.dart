@@ -67,6 +67,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '236951349015',
     projectId: 'vruksha-de997',
     storageBucket: 'vruksha-de997.appspot.com',
+    androidClientId: '236951349015-3rjuq5j7is7o1skda7qohdplgl8gcc7l.apps.googleusercontent.com',
+    iosClientId: '236951349015-qa3vcdikhrt2eb8sdkvra9sqf02rdh18.apps.googleusercontent.com',
     iosBundleId: 'com.example.vruksha',
   );
 
@@ -76,6 +78,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '236951349015',
     projectId: 'vruksha-de997',
     storageBucket: 'vruksha-de997.appspot.com',
+    androidClientId: '236951349015-3rjuq5j7is7o1skda7qohdplgl8gcc7l.apps.googleusercontent.com',
+    iosClientId: '236951349015-nrk69b1gpso9hmac89o48utl9jl7pq1q.apps.googleusercontent.com',
     iosBundleId: 'com.example.vruksha.RunnerTests',
   );
 }

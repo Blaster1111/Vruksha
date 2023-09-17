@@ -12,7 +12,20 @@
           "package_name": "com.example.vruksha"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "236951349015-3rjuq5j7is7o1skda7qohdplgl8gcc7l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.vruksha",
+            "certificate_hash": "f3e480588d6c718646a4a219e0ccd50a81bdf483"
+          }
+        },
+        {
+          "client_id": "236951349015-ots4f5pj9u3bkmhf3hmim4hlnplmlv34.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBkrzRxSJCkZGwVI7AelzhiKrDUqbDQ1a4"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "236951349015-972fd7dejmm7ivfctmqh1p7plutgskvf.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "236951349015-nrk69b1gpso9hmac89o48utl9jl7pq1q.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.vruksha.RunnerTests"
+              }
+            }
+          ]
         }
       }
     }
