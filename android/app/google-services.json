@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "236951349015",
+    "project_id": "vruksha-de997",
+    "storage_bucket": "vruksha-de997.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:236951349015:android:27386aa2e5bc118abaf952",
+        "android_client_info": {
+          "package_name": "com.example.vruksha"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBkrzRxSJCkZGwVI7AelzhiKrDUqbDQ1a4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
