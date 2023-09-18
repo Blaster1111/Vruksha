@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:vruksha/AuthActivity/Google_SignIn/google_signin.dart';
 import 'package:vruksha/AuthActivity/OTP_SignIn/otp_signin.dart';
+import 'package:vruksha/AuthActivity/Google_SignIn/auth_services.dart';
 
 class WelcomePage extends StatelessWidget {
   const WelcomePage({super.key});
@@ -35,11 +35,8 @@ class WelcomePage extends StatelessWidget {
             width: MediaQuery.sizeOf(context).width * 0.9,
             child: ElevatedButton(
               onPressed: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (BuildContext context) => Google_SignIn()),
-                );
+                AuthService authService = AuthService();
+                authService.hangleSignIn(context);
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.green.shade200,
