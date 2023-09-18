@@ -37,6 +37,7 @@ dependencies:
   firebase_auth: ^4.9.0
   font_awesome_flutter: ^10.5.0
   google_sign_in: ^6.1.5
+  http: ^1.1.0
   
   
 

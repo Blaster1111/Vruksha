@@ -1,6 +1,5 @@
-import 'dart:convert';
 import 'dart:io';
-
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -16,7 +15,6 @@ class PostPage extends StatefulWidget {
 class _PostPageState extends State<PostPage> {
   String description = '';
   var _imageFile;
-  String _base64Image = "";
   bool isFormValid = false;
 
   Future<void> _requestCameraPermission() async {
@@ -73,19 +71,35 @@ class _PostPageState extends State<PostPage> {
       setState(() {
         _imageFile = File(pickedFile.path);
       });
-      _convertToBase64();
     }
   }
 
-  void _convertToBase64() async {
+  Future<void> _uploadImageToCloudinary() async {
     if (_imageFile != null) {
-      List<int> imageBytes = await _imageFile.readAsBytes();
-      String base64String = base64Encode(imageBytes);
-      setState(() {
-        _base64Image = base64String;
-        isFormValid = _imageFile != null && description.isNotEmpty;
-      });
-      print("Base64 Image: $_base64Image");
+      final uri =
+          Uri.parse("https://api.cloudinary.com/v1_1/db670bhmc/image/upload");
+      final request = http.MultipartRequest('POST', uri)
+        ..fields['upload_preset'] = 'vruksha'
+        ..files.add(http.MultipartFile(
+          'file',
+          _imageFile.readAsBytes().asStream(),
+          _imageFile.lengthSync(),
+          filename: 'image.jpg', // Change to the appropriate filename
+        ));
+
+      try {
+        final response = await request.send();
+
+        if (response.statusCode == 200) {
+          final responseJson = await response.stream.bytesToString();
+          print('Image uploaded successfully!');
+          print('Image URL: $responseJson');
+        } else {
+          print('Failed to upload image. Status code: ${response.statusCode}');
+        }
+      } catch (error) {
+        print('Error uploading image: $error');
+      }
     }
   }
 
@@ -169,7 +183,8 @@ class _PostPageState extends State<PostPage> {
                 padding: EdgeInsets.all(16.0),
                 child: ElevatedButton(
                   onPressed: isFormValid
-                      ? () {
+                      ? () async {
+                          await _uploadImageToCloudinary();
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
