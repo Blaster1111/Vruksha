@@ -4,160 +4,195 @@ import 'package:vruksha/AuthActivity/expert.dart';
 import 'package:vruksha/home_page.dart';
 
 class OTPSignIn extends StatefulWidget {
-  const OTPSignIn({Key? key}) : super(key: key);
-
   @override
-  State<OTPSignIn> createState() => _OTPSignInState();
+  _OTPSignInState createState() => _OTPSignInState();
 }
 
 class _OTPSignInState extends State<OTPSignIn> {
-  TextEditingController phoneNumber = TextEditingController();
-  TextEditingController otp = TextEditingController();
-  bool visible = false;
-  var temp;
+  final TextEditingController _phoneNumberController = TextEditingController();
+  final TextEditingController _otpController = TextEditingController();
+  String _verificationId = '';
 
-  @override
-  void dispose() {
-    phoneNumber.dispose();
-    otp.dispose();
-    super.dispose();
+  Future<void> _verifyPhoneNumber(String phoneNumber) async {
+    final PhoneVerificationCompleted verificationCompleted =
+        (PhoneAuthCredential credential) async {
+      final authResult =
+          await FirebaseAuth.instance.signInWithCredential(credential);
+      // Handle successful login
+      final isNewUser = authResult.additionalUserInfo?.isNewUser ?? false;
+      if (isNewUser) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  Expert()), // Navigate to Expert screen for new users
+        );
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  HomePage()), // Navigate to HomePage for existing users
+        );
+      }
+      print('User signed in: ${authResult.user}');
+    };
+
+    final PhoneVerificationFailed verificationFailed =
+        (FirebaseAuthException e) {
+      // Handle verification failed
+      print('Phone number verification failed: ${e.message}');
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Verification Failed'),
+            content: Text('Phone number verification failed: ${e.message}'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    };
+
+    final PhoneCodeSent codeSent = (String verificationId, int? resendToken) {
+      // Store the verification ID for later use
+      setState(() {
+        _verificationId = verificationId;
+      });
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('OTP Sent'),
+            content: Text('OTP has been sent to your phone number.'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    };
+
+    final PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout =
+        (String verificationId) {
+      // Auto-retrieval timeout
+      print('Auto-retrieval timeout: $verificationId');
+    };
+
+    await FirebaseAuth.instance.verifyPhoneNumber(
+      phoneNumber: phoneNumber,
+      verificationCompleted: verificationCompleted,
+      verificationFailed: verificationFailed,
+      codeSent: codeSent,
+      codeAutoRetrievalTimeout: codeAutoRetrievalTimeout,
+    );
+  }
+
+  Future<void> _signInWithOTP(String otp) async {
+    try {
+      final AuthCredential credential = PhoneAuthProvider.credential(
+        verificationId: _verificationId,
+        smsCode: otp,
+      );
+      final authResult =
+          await FirebaseAuth.instance.signInWithCredential(credential);
+      // Handle successful login
+      final isNewUser = authResult.additionalUserInfo?.isNewUser ?? false;
+      if (isNewUser) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  Expert()), // Navigate to Expert screen for new users
+        );
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  HomePage()), // Navigate to HomePage for existing users
+        );
+      }
+      print('User signed in: ${authResult.user}');
+    } catch (e) {
+      // Handle verification failed
+      print('Phone number verification failed: $e');
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Verification Failed'),
+            content: Text('Phone number verification failed: $e'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SizedBox(
-        width: MediaQuery.of(context).size.width,
+      appBar: AppBar(
+        title: Text('OTP Authentication'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                shape: BoxShape.circle,
+          children: <Widget>[
+            TextField(
+              controller: _phoneNumberController,
+              decoration: InputDecoration(
+                hintText: 'Enter your phone number',
               ),
-              height: MediaQuery.of(context).size.height * 0.3,
-              child: Image.asset('assets/images/vruksha_icon.png'),
             ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.1,
+            SizedBox(height: 16.0),
+            ElevatedButton(
+              onPressed: () {
+                final phoneNumber = '+91${_phoneNumberController.text}';
+                _verifyPhoneNumber(phoneNumber);
+              },
+              child: Text('Send OTP'),
             ),
-            inputTextField("Contact Number", phoneNumber, context),
-            visible ? inputTextField("OTP", otp, context) : SizedBox(),
-            !visible ? SendOTPButton("Send OTP") : SubmitOTPButton("Submit"),
+            SizedBox(height: 16.0),
+            TextField(
+              controller: _otpController,
+              decoration: InputDecoration(
+                hintText: 'Enter OTP',
+              ),
+            ),
+            SizedBox(height: 16.0),
+            ElevatedButton(
+              onPressed: () {
+                final otp = _otpController.text.trim();
+                _signInWithOTP(otp);
+              },
+              child: Text('Verify OTP'),
+            ),
           ],
         ),
       ),
     );
-  }
-
-  Widget SendOTPButton(String text) => ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.green.shade200,
-        ),
-        onPressed: () async {
-          setState(() {
-            visible = !visible;
-          });
-          temp = await FirebaseAuthentication().sendOTP(phoneNumber.text);
-        },
-        child: Text(
-          text,
-          style: TextStyle(
-            color: Colors.black87,
-          ),
-        ),
-      );
-
-  Widget SubmitOTPButton(String text) => ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.green.shade200,
-        ),
-        onPressed: () =>
-            FirebaseAuthentication().authenticate(temp, otp.text, context),
-        child: Text(
-          text,
-          style: TextStyle(
-            color: Colors.black87,
-          ),
-        ),
-      );
-
-  Widget inputTextField(String labelText,
-          TextEditingController textEditingController, BuildContext context) =>
-      Padding(
-        padding: EdgeInsets.all(10.00),
-        child: SizedBox(
-          width: MediaQuery.of(context).size.width / 1.5,
-          child: TextFormField(
-            obscureText: labelText == "OTP" ? true : false,
-            controller: textEditingController,
-            decoration: InputDecoration(
-              hintText: labelText,
-              hintStyle: TextStyle(color: Colors.black87),
-              filled: true,
-              fillColor: Colors.green.shade200,
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.transparent),
-                borderRadius: BorderRadius.circular(5.5),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.transparent),
-                borderRadius: BorderRadius.circular(5.5),
-              ),
-            ),
-          ),
-        ),
-      );
-}
-
-class FirebaseAuthentication {
-  String phoneNumber = "";
-
-  sendOTP(String phoneNumber) async {
-    this.phoneNumber = phoneNumber;
-    FirebaseAuth auth = FirebaseAuth.instance;
-    ConfirmationResult result = await auth.signInWithPhoneNumber(
-      '+91$phoneNumber',
-    );
-    printMessage("OTP Sent to +91 $phoneNumber");
-    return result;
-  }
-
-  authenticate(ConfirmationResult confirmationResult, String otp,
-      BuildContext context) async {
-    try {
-      UserCredential userCredential = await confirmationResult.confirm(otp);
-      if (userCredential.additionalUserInfo!.isNewUser) {
-        printMessage("Authentication Successful for new user");
-        // Redirect to the Expert Page after successful authentication for new user
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (BuildContext context) => Expert(),
-          ),
-        );
-      } else {
-        printMessage("Authentication Successful for existing user");
-        // Redirect to the Home Page after successful authentication for existing user
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (BuildContext context) => HomePage(),
-          ),
-        );
-      }
-    } catch (e) {
-      printMessage("Error: $e");
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("Incorrect OTP. Please try again."),
-        ),
-      );
-    }
-  }
-
-  printMessage(String msg) {
-    debugPrint(msg);
   }
 }

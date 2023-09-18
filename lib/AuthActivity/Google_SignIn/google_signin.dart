@@ -16,7 +16,7 @@ class Google_SignIn extends StatelessWidget {
         body: Center(
             child: ElevatedButton(
           onPressed: () {
-            authService.hangleSignIn();
+            authService.hangleSignIn(context);
           },
           child: Text("google sign in",
               style: TextStyle(
