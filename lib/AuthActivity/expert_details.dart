@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vruksha/home_page.dart';
 
 class ExpertDetails extends StatefulWidget {
   const ExpertDetails({super.key});
@@ -92,7 +93,11 @@ class _ExpertDetailsState extends State<ExpertDetails> {
                           String email = _emailController.text;
                           String aadhar = _aadharController.text;
                           String expertise = _expertiseController.text;
-
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      HomePage()));
                           // Use the captured values as needed
                           print("Name: $name");
                           print("Experience: $exp");
