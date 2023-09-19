@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:vruksha/AuthActivity/expert.dart';
 import 'package:vruksha/AuthActivity/welcome.dart';
 import 'package:vruksha/firebase_options.dart';
 import 'package:vruksha/home_page.dart';
@@ -22,7 +23,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       routes: {
-        "/": (context) => WelcomePage(),
+        "/": (context) => Expert(),
         "/home_page": (context) => HomePage(),
         "/splash_screen": (context) => SplashScreen(),
       },
