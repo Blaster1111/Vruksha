@@ -1,5 +1,8 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vruksha/AuthActivity/expert.dart';
 import 'package:vruksha/home_page.dart';
 
@@ -108,24 +111,64 @@ class _OTPSignInState extends State<OTPSignIn> {
       );
       final authResult =
           await FirebaseAuth.instance.signInWithCredential(credential);
-      // Handle successful login
+
       final isNewUser = authResult.additionalUserInfo?.isNewUser ?? false;
       if (isNewUser) {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-              builder: (context) =>
-                  Expert()), // Navigate to Expert screen for new users
+            builder: (context) => Expert(),
+          ),
         );
       } else {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-              builder: (context) =>
-                  HomePage()), // Navigate to HomePage for existing users
+            builder: (context) => HomePage(),
+          ),
         );
       }
+
       print('User signed in: ${authResult.user}');
+
+      // Extract user information
+      final uid = authResult.user?.uid ?? '';
+      final providerData = authResult.user?.providerData[0];
+      final date = DateTime.now().toString();
+
+      // Define API endpoint and headers
+      final apiUrl = 'https://vruksha-server.onrender.com/auth/';
+      final headers = {
+        "Content-Type": "application/json",
+      };
+
+      // Create the request body
+      final requestBody = {
+        "uid": uid,
+        "providerData": providerData,
+        "date": date,
+      };
+      // Make the HTTP POST request
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: headers,
+        body: json.encode(requestBody),
+      );
+
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+        final authToken = responseData['authToken'];
+
+        // Store the authToken in SharedPreferences
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('authToken', authToken);
+
+        print('Auth token saved in SharedPreferences: $authToken');
+      } else {
+        print(
+            'Failed to make the POST request. Status code: ${response.statusCode}');
+        print('Response body: ${response.body}');
+      }
     } catch (e) {
       // Handle verification failed
       print('Phone number verification failed: $e');

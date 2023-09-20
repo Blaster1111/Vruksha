@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vruksha/Cards/comment_card.dart';
 
 class ArticleViewCard extends StatelessWidget {
   final String articleTitle;
@@ -88,14 +89,15 @@ class ArticleViewCard extends StatelessWidget {
                   ),
                 ),
                 Spacer(),
-                Text(
-                  'By $userName',
-                  style: TextStyle(
-                    fontSize: 16.0,
-                    color: Colors.black,
-                  ),
-                ),
               ],
+            ),
+            Spacer(),
+            Text(
+              'By $userName',
+              style: TextStyle(
+                fontSize: 16.0,
+                color: Colors.black,
+              ),
             ),
           ],
         ),
