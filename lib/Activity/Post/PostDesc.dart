@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vruksha/Cards/comment_card.dart';
+import 'package:vruksha/Cards/expert_postcard.dart';
 
 class PostViewPage extends StatelessWidget {
   @override
@@ -21,34 +22,13 @@ class PostViewPage extends StatelessWidget {
                   bottomRight: Radius.circular(12.0),
                 ),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Problem Title',
-                    style: TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                  SizedBox(height: 8.0),
-                  Text(
-                    '1 day ago',
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
+              child: PostCard(
+                date: 'Date',
+                diseaseName: 'Dieae name',
+                imageUrl: 'assets/images/Trial.jpg',
               ),
             ),
 
-            Container(
-              child: Image.asset(
-                'assets/images/Trial.jpg',
-                fit: BoxFit.cover, // Make the image cover the whole space
-              ),
-            ),
             Container(
               color: Colors.green.shade600,
               padding: EdgeInsets.all(16.0),

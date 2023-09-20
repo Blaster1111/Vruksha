@@ -1,20 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:vruksha/Activity/Post/PostDesc.dart';
+import 'package:vruksha/Cards/expert_postcard.dart';
 
-class Home extends StatefulWidget {
-  const Home({super.key});
+class Home extends StatelessWidget {
+  // Sample list of post data (you can replace this with your data)
 
-  @override
-  State<Home> createState() => _HomeState();
-}
-
-class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-          child: Column(
-        children: [Text('Home')],
-      )),
+    return ListView.builder(
+      itemCount:
+          1, // Set the itemCount to the number of items you want to display
+      itemBuilder: (BuildContext context, int index) {
+        return GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    PostViewPage(), // Navigate to PostViewPage
+              ),
+            );
+          },
+          child: PostCard(
+            diseaseName: 'HI',
+            date: '11.11.2004',
+            imageUrl: 'assets/images/Trial.jpg',
+          ),
+        );
+      },
     );
   }
 }

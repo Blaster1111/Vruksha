@@ -52,10 +52,12 @@ class PostCard extends StatelessWidget {
               ),
             ),
             SizedBox(height: 8.0),
-            Expanded(
+            Container(
+              height: MediaQuery.sizeOf(context).height,
+              width:
+                  MediaQuery.sizeOf(context).width, // Set the height you desire
               child: Image.asset(
                 imageUrl,
-                width: double.infinity,
                 fit: BoxFit.cover,
               ),
             ),
