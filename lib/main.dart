@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 import 'package:vruksha/AuthActivity/welcome.dart';
+import 'package:vruksha/Cards/comment_card.dart';
 import 'package:vruksha/Cards/expert_postcard.dart';
 
 import 'package:vruksha/firebase_options.dart';
@@ -25,10 +26,12 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       routes: {
-        "/": (context) => DiseasePostCard(
-              diseaseName: 'Cancer',
+        "/": (context) => CommentCard(
+              description: 'HI I AM A Disease',
+              likeCount: 69,
+              isLiked: true,
+              onLikePressed: () {},
               date: '11.11.2004',
-              imageUrl: 'assets/images/Trial.jpg',
             ),
         "/home_page": (context) => HomePage(),
         "/splash_screen": (context) => SplashScreen(),
