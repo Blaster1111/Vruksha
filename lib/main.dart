@@ -2,12 +2,8 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:vruksha/Activity/Post/PostDesc.dart';
-import 'package:vruksha/Activity/home.dart';
 
 import 'package:vruksha/AuthActivity/welcome.dart';
-import 'package:vruksha/Cards/comment_card.dart';
-import 'package:vruksha/Cards/expert_postcard.dart';
 
 import 'package:vruksha/AuthActivity/firebase_options.dart';
 import 'package:vruksha/home_page.dart';
@@ -28,7 +24,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       routes: {
-        "/": (context) => HomePage(),
+        "/": (context) => SplashScreen(),
         "/home_page": (context) => HomePage(),
         "/splash_screen": (context) => SplashScreen(),
       },
