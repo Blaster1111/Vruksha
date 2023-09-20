@@ -18,7 +18,7 @@ class ArticleCard extends StatelessWidget {
     return Card(
       elevation: 4,
       margin: EdgeInsets.all(16.0),
-      color: Colors.yellow.shade700,
+      color: Colors.amber.shade300,
       child: Padding(
         padding: EdgeInsets.all(16.0),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [

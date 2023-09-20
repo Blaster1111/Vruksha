@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+
+import 'package:vruksha/Activity/Article/NewArticle.dart';
 import 'package:vruksha/Cards/article_card.dart'; // Import your ArticleCard widget
+import 'package:vruksha/Activity/Article/ArticleView.dart'; // Import your ArticleViewCard widget
 
 class ArticlePage extends StatefulWidget {
   const ArticlePage({super.key});
@@ -42,6 +45,10 @@ class _ArticlePageState extends State<ArticlePage> {
         children: [
           ElevatedButton.icon(
             onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => NewArticle()));
               // Handle button tap (you can add functionality here)
             },
             style: ElevatedButton.styleFrom(
@@ -54,13 +61,30 @@ class _ArticlePageState extends State<ArticlePage> {
               itemCount:
                   5, // Replace with the number of articles you want to display
               itemBuilder: (BuildContext context, int index) {
-                return ArticleCard(
-                  // Pass article data to ArticleCard here
-                  articleTitle: 'Sample Article $index',
-                  articleDesc: 'Sample Description $index',
-                  date: 'Sample Date $index',
-                  expertName: 'Sample Expert $index',
-                  // Add any other data you want to pass to ArticleCard
+                return GestureDetector(
+                  onTap: () {
+                    // Navigate to ArticleViewCard when tapped
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (BuildContext context) => ArticleViewCard(
+                            articleTitle: 'Vruksa',
+                            date: '11  ',
+                            tags: ['Date', 'No'],
+                            articleContent: 'articleConten',
+                            likes: 69,
+                            userName: 'Rudra'),
+                      ),
+                    );
+                  },
+                  child: ArticleCard(
+                    // Pass article data to ArticleCard here
+                    articleTitle: 'Sample Article $index',
+                    articleDesc: 'Sample Description $index',
+                    date: 'Sample Date $index',
+                    expertName: 'Sample Expert $index',
+                    // Add any other data you want to pass to ArticleCard
+                  ),
                 );
               },
             ),
