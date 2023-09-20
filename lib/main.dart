@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:vruksha/Activity/Post/PostDesc.dart';
 
 import 'package:vruksha/AuthActivity/welcome.dart';
 import 'package:vruksha/Cards/comment_card.dart';
@@ -26,13 +27,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       routes: {
-        "/": (context) => CommentCard(
-              description: 'HI I AM A Disease',
-              likeCount: 69,
-              isLiked: true,
-              onLikePressed: () {},
-              date: '11.11.2004',
-            ),
+        "/": (context) => PostViewPage(),
         "/home_page": (context) => HomePage(),
         "/splash_screen": (context) => SplashScreen(),
       },

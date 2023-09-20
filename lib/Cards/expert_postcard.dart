@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class DiseasePostCard extends StatelessWidget {
+class PostCard extends StatelessWidget {
   final String diseaseName;
   final String date;
   final String imageUrl;
 
-  DiseasePostCard({
+  PostCard({
     required this.diseaseName,
     required this.date,
     required this.imageUrl,
@@ -53,7 +53,7 @@ class DiseasePostCard extends StatelessWidget {
             ),
             SizedBox(height: 8.0),
             Expanded(
-              child: Image.network(
+              child: Image.asset(
                 imageUrl,
                 width: double.infinity,
                 fit: BoxFit.cover,

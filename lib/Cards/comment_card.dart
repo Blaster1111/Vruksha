@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class CommentCard extends StatefulWidget {
+class CommentCard extends StatelessWidget {
   final String description;
   final String date;
   final int likeCount;
@@ -16,11 +16,6 @@ class CommentCard extends StatefulWidget {
   });
 
   @override
-  _CommentCardState createState() => _CommentCardState();
-}
-
-class _CommentCardState extends State<CommentCard> {
-  @override
   Widget build(BuildContext context) {
     return Card(
       elevation: 4.0,
@@ -32,7 +27,7 @@ class _CommentCardState extends State<CommentCard> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              widget.description,
+              description,
               style: TextStyle(
                 fontSize: 16.0,
                 color: Colors.black,
@@ -43,13 +38,13 @@ class _CommentCardState extends State<CommentCard> {
               children: [
                 IconButton(
                   icon: Icon(
-                    widget.isLiked ? Icons.thumb_up : Icons.thumb_up_alt,
-                    color: widget.isLiked ? Colors.blue : Colors.black,
+                    isLiked ? Icons.thumb_up : Icons.thumb_up_alt,
+                    color: isLiked ? Colors.blue : Colors.black,
                   ),
-                  onPressed: widget.onLikePressed,
+                  onPressed: onLikePressed,
                 ),
                 Text(
-                  '${widget.likeCount} people found this helpful',
+                  '${likeCount} people found this helpful',
                   style: TextStyle(
                     fontSize: 14.0,
                     color: Colors.black,
@@ -57,7 +52,7 @@ class _CommentCardState extends State<CommentCard> {
                 ),
                 Spacer(),
                 Text(
-                  '${widget.date}',
+                  date,
                   style: TextStyle(
                     fontSize: 14.0,
                     color: Colors.black,
