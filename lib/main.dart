@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:vruksha/AuthActivity/welcome.dart';
 
 import 'package:vruksha/AuthActivity/firebase_options.dart';
+import 'package:vruksha/Cards/article_card.dart';
 import 'package:vruksha/home_page.dart';
 
 void main() async {
@@ -24,7 +25,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       routes: {
-        "/": (context) => SplashScreen(),
+        "/": (context) => HomePage(),
         "/home_page": (context) => HomePage(),
         "/splash_screen": (context) => SplashScreen(),
       },

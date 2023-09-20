@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vruksha/Activity/articles.dart';
+import 'package:vruksha/Activity/Article/articles.dart';
 import 'package:vruksha/Activity/home.dart';
 import 'package:vruksha/Activity/Post/posts.dart';
 import 'package:vruksha/Activity/profile.dart';

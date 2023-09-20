@@ -32,7 +32,6 @@ class PostViewPage extends StatelessWidget {
                 imageUrl: 'assets/images/Trial.jpg',
               ),
             ),
-
             Container(
               color: Colors.green.shade600,
               padding: EdgeInsets.all(16.0),
@@ -47,6 +46,21 @@ class PostViewPage extends StatelessWidget {
               child: Text(
                 'Solution: Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
                 style: TextStyle(color: Colors.white),
+              ),
+            ),
+            Center(
+              child: Container(
+                child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green.shade400),
+                    onPressed: () {},
+                    child: Text(
+                      'Verify as Expert',
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontStyle: FontStyle.italic,
+                          fontWeight: FontWeight.bold),
+                    )),
               ),
             ),
             Padding(
@@ -112,7 +126,6 @@ class PostViewPage extends StatelessWidget {
               isLiked: true,
               onLikePressed: () {},
             ),
-            // Add more CommentCard widgets for additional comments
           ],
         ),
       ),

@@ -106,6 +106,31 @@ class _PostPageState extends State<PostPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        elevation: 0.0,
+        backgroundColor: Colors.white24,
+        flexibleSpace: Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                'assets/images/vruksha_icon.png',
+                width: 40,
+                height: 40,
+              ),
+              SizedBox(width: 8.0),
+              Text(
+                'Vrukshaa',
+                style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.green.shade200,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
       body: Container(
         child: Center(
           child: Column(
@@ -125,7 +150,7 @@ class _PostPageState extends State<PostPage> {
               ),
               if (_imageFile == null)
                 Container(
-                  height: MediaQuery.of(context).size.height * 0.3,
+                  height: MediaQuery.of(context).size.height * 0.2,
                   width: MediaQuery.of(context).size.width * 0.9,
                   child: ElevatedButton(
                     onPressed: _requestCameraPermission,
