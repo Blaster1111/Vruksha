@@ -1,9 +1,10 @@
 import 'dart:async';
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:vruksha/AuthActivity/expert.dart';
+
 import 'package:vruksha/AuthActivity/welcome.dart';
+
 import 'package:vruksha/firebase_options.dart';
 import 'package:vruksha/home_page.dart';
 
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       routes: {
-        "/": (context) => Expert(),
+        "/": (context) => WelcomePage(),
         "/home_page": (context) => HomePage(),
         "/splash_screen": (context) => SplashScreen(),
       },
@@ -47,10 +48,20 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void whereToGo() {
     Timer(Duration(seconds: 2), () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (BuildContext context) => HomePage()),
-      );
+      User? user = FirebaseAuth.instance.currentUser;
+
+      if (user != null) {
+        print(user.uid);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (BuildContext context) => HomePage()),
+        );
+      } else {
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (BuildContext context) => WelcomePage()));
+      }
     });
   }
 

@@ -31,7 +31,7 @@ class WelcomePage extends StatelessWidget {
             height: MediaQuery.of(context).size.height * 0.1,
           ),
           Container(
-            height: MediaQuery.of(context).size.height * 0.1,
+            height: MediaQuery.of(context).size.height * 0.05,
             width: MediaQuery.sizeOf(context).width * 0.9,
             child: ElevatedButton(
               onPressed: () {
@@ -67,7 +67,7 @@ class WelcomePage extends StatelessWidget {
             height: MediaQuery.of(context).size.height * 0.05,
           ),
           Container(
-            height: MediaQuery.of(context).size.height * 0.1,
+            height: MediaQuery.of(context).size.height * 0.05,
             width: MediaQuery.sizeOf(context).width * 0.9,
             child: ElevatedButton(
                 onPressed: () {
