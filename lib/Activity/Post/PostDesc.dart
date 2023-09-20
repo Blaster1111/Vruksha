@@ -3,6 +3,13 @@ import 'package:vruksha/Cards/comment_card.dart';
 import 'package:vruksha/Cards/expert_postcard.dart';
 
 class PostViewPage extends StatelessWidget {
+  final String diseaseName;
+  final String date;
+
+  PostViewPage({
+    required this.diseaseName,
+    required this.date,
+  });
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,8 +27,8 @@ class PostViewPage extends StatelessWidget {
                 ),
               ),
               child: PostCard(
-                date: 'Date',
-                diseaseName: 'Dieae name',
+                date: '$date',
+                diseaseName: '$diseaseName',
                 imageUrl: 'assets/images/Trial.jpg',
               ),
             ),
