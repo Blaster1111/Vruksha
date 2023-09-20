@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 
-class DiseaseCard extends StatelessWidget {
+class DiseasePostCard extends StatelessWidget {
   final String diseaseName;
   final String date;
-  final String expertName;
   final String imageUrl;
 
-  DiseaseCard({
+  DiseasePostCard({
     required this.diseaseName,
     required this.date,
-    required this.expertName,
     required this.imageUrl,
   });
 
@@ -18,7 +16,7 @@ class DiseaseCard extends StatelessWidget {
     return Card(
       elevation: 4.0,
       margin: EdgeInsets.all(16.0),
-      color: Colors.green.shade400,
+      color: Colors.grey.shade800,
       child: Padding(
         padding: EdgeInsets.all(16.0),
         child: Column(
@@ -29,7 +27,7 @@ class DiseaseCard extends StatelessWidget {
               style: TextStyle(
                 fontSize: 18.0,
                 fontWeight: FontWeight.bold,
-                color: Colors.white,
+                color: Colors.black,
               ),
             ),
             SizedBox(height: 8.0),
@@ -43,16 +41,9 @@ class DiseaseCard extends StatelessWidget {
                     color: Colors.white,
                   ),
                 ),
-                Text(
-                  expertName,
-                  style: TextStyle(
-                    fontSize: 16.0,
-                    color: Colors.white,
-                  ),
-                ),
               ],
             ),
-            SizedBox(height: 16.0),
+            SizedBox(height: 8.0),
             Text(
               "Verified by expert",
               style: TextStyle(
@@ -61,11 +52,12 @@ class DiseaseCard extends StatelessWidget {
               ),
             ),
             SizedBox(height: 8.0),
-            Image.network(
-              imageUrl,
-              width: double.infinity,
-              height: 200.0,
-              fit: BoxFit.cover,
+            Expanded(
+              child: Image.network(
+                imageUrl,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              ),
             ),
           ],
         ),
