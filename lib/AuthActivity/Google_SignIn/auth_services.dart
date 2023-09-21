@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:vruksha/AuthActivity/expert.dart';
 import 'package:vruksha/AuthActivity/welcome.dart';
 import 'package:vruksha/home_page.dart';
 
@@ -21,6 +22,10 @@ class AuthService {
           idToken: googleAuth.idToken,
         );
         await _auth.signInWithCredential(credential);
+        UserCredential userCredential =
+            await FirebaseAuth.instance.signInWithCredential(credential);
+
+        bool isNewUser = userCredential.additionalUserInfo?.isNewUser ?? false;
 
         // After Firebase authentication is successful, prepare data for the API.
         String apiUrl = 'https://vruksha-server.onrender.com/auth/';
@@ -49,13 +54,22 @@ class AuthService {
           SharedPreferences prefs = await SharedPreferences.getInstance();
           prefs.setString('authToken', authToken);
 
-          // Navigate to the HomePage.
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => HomePage(),
-            ),
-          );
+          if (isNewUser) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => Expert(),
+              ),
+            );
+          } else {
+            // Navigate to the HomePage.
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => HomePage(),
+              ),
+            );
+          }
         } else {
           print('API request failed with status code: ${response.statusCode}');
         }

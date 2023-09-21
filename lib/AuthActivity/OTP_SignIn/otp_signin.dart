@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:vruksha/AuthActivity/expert.dart';
-import 'package:vruksha/home_page.dart';
+
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:vruksha/home_page.dart';
 
 class OTPSignIn extends StatefulWidget {
   @override
@@ -101,7 +102,7 @@ class _OTPSignInState extends State<OTPSignIn> {
       } else {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => Expert()),
+          MaterialPageRoute(builder: (context) => HomePage()),
         );
       }
 
