@@ -1,10 +1,10 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vruksha/AuthActivity/expert.dart';
 import 'package:vruksha/home_page.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class OTPSignIn extends StatefulWidget {
   @override
@@ -15,32 +15,15 @@ class _OTPSignInState extends State<OTPSignIn> {
   final TextEditingController _phoneNumberController = TextEditingController();
   final TextEditingController _otpController = TextEditingController();
   String _verificationId = '';
-
   Future<void> _verifyPhoneNumber(String phoneNumber) async {
     final PhoneVerificationCompleted verificationCompleted =
         (PhoneAuthCredential credential) async {
       final authResult =
           await FirebaseAuth.instance.signInWithCredential(credential);
       // Handle successful login
-      final isNewUser = authResult.additionalUserInfo?.isNewUser ?? false;
-      if (isNewUser) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) =>
-                  Expert()), // Navigate to Expert screen for new users
-        );
-      } else {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) =>
-                  HomePage()), // Navigate to HomePage for existing users
-        );
-      }
+
       print('User signed in: ${authResult.user}');
     };
-
     final PhoneVerificationFailed verificationFailed =
         (FirebaseAuthException e) {
       // Handle verification failed
@@ -63,7 +46,6 @@ class _OTPSignInState extends State<OTPSignIn> {
         },
       );
     };
-
     final PhoneCodeSent codeSent = (String verificationId, int? resendToken) {
       // Store the verification ID for later use
       setState(() {
@@ -87,13 +69,11 @@ class _OTPSignInState extends State<OTPSignIn> {
         },
       );
     };
-
     final PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout =
         (String verificationId) {
       // Auto-retrieval timeout
       print('Auto-retrieval timeout: $verificationId');
     };
-
     await FirebaseAuth.instance.verifyPhoneNumber(
       phoneNumber: phoneNumber,
       verificationCompleted: verificationCompleted,
@@ -111,44 +91,50 @@ class _OTPSignInState extends State<OTPSignIn> {
       );
       final authResult =
           await FirebaseAuth.instance.signInWithCredential(credential);
-
+      // Handle successful login
       final isNewUser = authResult.additionalUserInfo?.isNewUser ?? false;
       if (isNewUser) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(
-            builder: (context) => Expert(),
-          ),
+          MaterialPageRoute(builder: (context) => Expert()),
         );
       } else {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(
-            builder: (context) => HomePage(),
-          ),
+          MaterialPageRoute(builder: (context) => Expert()),
         );
       }
 
-      print('User signed in: ${authResult.user}');
-
+      print('User signed in: ${authResult.user.runtimeType}');
       // Extract user information
       final uid = authResult.user?.uid ?? '';
-      final providerData = authResult.user?.providerData[0];
+      final providerData = authResult.user?.providerData;
       final date = DateTime.now().toString();
+      print('mf rudra ${providerData}');
 
-      // Define API endpoint and headers
+      // Convert providerData to a List<Map<String, dynamic>>
+      final providerDataList = providerData?.map((userInfo) {
+        return {
+          "providerId": userInfo.providerId,
+          "uid": userInfo.uid,
+          "displayName": userInfo.displayName,
+          "phoneNumber": userInfo.phoneNumber,
+          "email": userInfo.email,
+          "photoURL": userInfo.photoURL
+        };
+      }).toList();
+
       final apiUrl = 'https://vruksha-server.onrender.com/auth/';
       final headers = {
         "Content-Type": "application/json",
       };
 
-      // Create the request body
       final requestBody = {
         "uid": uid,
-        "providerData": providerData,
+        "providerData": providerDataList,
         "date": date,
       };
-      // Make the HTTP POST request
+
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: headers,
@@ -168,6 +154,7 @@ class _OTPSignInState extends State<OTPSignIn> {
         print(
             'Failed to make the POST request. Status code: ${response.statusCode}');
         print('Response body: ${response.body}');
+        // Handle the error case here
       }
     } catch (e) {
       // Handle verification failed

@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:vruksha/home_page.dart';
 
@@ -85,26 +88,64 @@ class _ExpertDetailsState extends State<ExpertDetails> {
                 SizedBox(height: 20.0),
                 ElevatedButton(
                   onPressed: isFormValid
-                      ? () {
-                          // Handle verification logic here
+                      ? () async {
                           String name = _nameController.text;
                           String exp = _expController.text;
                           String qualification = _qualificationController.text;
                           String email = _emailController.text;
                           String aadhar = _aadharController.text;
                           String expertise = _expertiseController.text;
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (BuildContext context) =>
-                                      HomePage()));
-                          // Use the captured values as needed
-                          print("Name: $name");
-                          print("Experience: $exp");
-                          print("Qualification: $qualification");
-                          print("Email: $email");
-                          print("Aadhar Number: $aadhar");
-                          print("Expertise: $expertise");
+
+                          // Prepare the data for the API request.
+                          String apiUrl =
+                              'https://vruksha-server.onrender.com/auth/verify';
+                          Map<String, dynamic> body = {
+                            'name': name,
+                            'qualification': qualification,
+                            'email': email,
+                            'experience': exp,
+                            'aadhar number': aadhar,
+                            'expertise': expertise,
+                            'date': DateTime.now().toIso8601String(),
+                          };
+
+                          // Get the authToken from SharedPreferences.
+                          SharedPreferences prefs =
+                              await SharedPreferences.getInstance();
+                          String authToken = prefs.getString('authToken') ?? '';
+
+                          // Set the headers for the API request.
+                          Map<String, String> headers = {
+                            'Content-Type': 'application/json',
+                            'authToken': authToken,
+                          };
+
+                          try {
+                            // Send a POST request to the API.
+                            http.Response response = await http.post(
+                              Uri.parse(apiUrl),
+                              headers: headers,
+                              body: jsonEncode(body),
+                            );
+
+                            if (response.statusCode == 200) {
+                              // If the API request is successful, set type=expert in SharedPreferences.
+                              prefs.setString('type', 'expert');
+
+                              // Navigate to the HomePage.
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (BuildContext context) => HomePage(),
+                                ),
+                              );
+                            } else {
+                              print(
+                                  'API request failed with status code: ${response.statusCode}');
+                            }
+                          } catch (e) {
+                            print("Error verifying details: $e");
+                          }
                         }
                       : null,
                   style: ElevatedButton.styleFrom(
