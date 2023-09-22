@@ -1,11 +1,54 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vruksha/Activity/Post/PostDesc.dart';
 import 'package:vruksha/Cards/expert_postcard.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
   final diseaseName = 'HI';
+  List<Map<String, dynamic>> postData = [];
   final date = '11.11.2004';
-  // Sample list of post data (you can replace this with your data)
+
+  @override
+  void initState() {
+    super.initState();
+    fetchDataFromBackend();
+  }
+
+  Future<void> fetchDataFromBackend() async {
+    final apiUrl = 'https://vruksha-server.onrender.com/post/';
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String authToken = prefs.getString('authToken') ?? '';
+
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      'authToken': authToken,
+    };
+    try {
+      final response = await http.get(
+        Uri.parse(apiUrl),
+        headers: headers,
+      );
+
+      print(response);
+      if (response.statusCode == 200) {
+        final List<dynamic> responseData = json.decode(response.body);
+        setState(() {
+          postData = List<Map<String, dynamic>>.from(responseData);
+        });
+      } else {
+        print('Req Failed in status code');
+      }
+    } catch (e) {
+      print('Req Failed in url');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,9 +71,9 @@ class Home extends StatelessWidget {
               Text(
                 'Vrukshaa',
                 style: TextStyle(
-                  fontSize: 20.0, // Adjust the font size as needed
-                  fontWeight: FontWeight.bold, // Add bold style if desired
-                  color: Colors.white, // Customize the text color
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
                 ),
               ),
             ],
@@ -38,10 +81,13 @@ class Home extends StatelessWidget {
         ),
       ),
       body: ListView.builder(
-        itemCount:
-            1, // Set the itemCount to the number of items you want to display
+        itemCount: postData.length,
         itemBuilder: (BuildContext context, int index) {
-          final imageUrl = 'assets/images/Trial.jpg';
+          final post = postData[index];
+          final imageUrl = post['img'] != null
+              ? post['img']
+              : 'https://example.com/default_image.jpg';
+          final diseaseName = post['desc'] ?? 'Unknown Disease';
 
           return GestureDetector(
             onTap: () {
@@ -49,15 +95,16 @@ class Home extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (context) => PostViewPage(
+                    imageUrl: imageUrl,
                     diseaseName: diseaseName,
-                    date: date,
-                  ), // Pass data to PostDescPage
+                    date: '11.11.2004', // You can set the date as needed
+                  ),
                 ),
               );
             },
             child: PostCard(
               diseaseName: diseaseName,
-              date: date,
+              date: '11.11.2004',
               imageUrl: imageUrl,
             ),
           );

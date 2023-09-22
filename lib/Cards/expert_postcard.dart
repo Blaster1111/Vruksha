@@ -56,7 +56,7 @@ class PostCard extends StatelessWidget {
               height: MediaQuery.sizeOf(context).height,
               width:
                   MediaQuery.sizeOf(context).width, // Set the height you desire
-              child: Image.asset(
+              child: Image.network(
                 imageUrl,
                 fit: BoxFit.cover,
               ),

@@ -1,15 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vruksha/Cards/comment_card.dart';
 import 'package:vruksha/Cards/expert_postcard.dart';
 
-class PostViewPage extends StatelessWidget {
+class PostViewPage extends StatefulWidget {
   final String diseaseName;
   final String date;
+  final String imageUrl;
 
   PostViewPage({
     required this.diseaseName,
     required this.date,
+    required this.imageUrl,
   });
+
+  @override
+  State<PostViewPage> createState() => _PostViewPageState();
+}
+
+class _PostViewPageState extends State<PostViewPage> {
+  final TextEditingController _commentController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,9 +38,9 @@ class PostViewPage extends StatelessWidget {
                 ),
               ),
               child: PostCard(
-                date: '$date',
-                diseaseName: '$diseaseName',
-                imageUrl: 'assets/images/Trial.jpg',
+                date: '${widget.date}',
+                diseaseName: '${widget.diseaseName}',
+                imageUrl: '${widget.imageUrl}',
               ),
             ),
             Container(
@@ -96,6 +107,7 @@ class PostViewPage extends StatelessWidget {
                 children: [
                   Expanded(
                     child: TextFormField(
+                      controller: _commentController,
                       decoration: InputDecoration(
                         labelText: 'Add a comment...',
                       ),
@@ -103,7 +115,20 @@ class PostViewPage extends StatelessWidget {
                   ),
                   IconButton(
                     icon: Icon(Icons.send),
-                    onPressed: () {
+                    onPressed: () async {
+                      String commentMessage = _commentController.text;
+
+                      if (commentMessage.isNotEmpty) {
+                        SharedPreferences prefs =
+                            await SharedPreferences.getInstance();
+                        String authToken = prefs.getString('authToken') ?? '';
+
+                        String apiUrl = '';
+                        Map<String, dynamic> body = {
+                          'message': commentMessage,
+                          'date': authToken,
+                        };
+                      }
                       // Handle sending the comment
                     },
                   ),
