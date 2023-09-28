@@ -98,7 +98,7 @@ class _ExpertDetailsState extends State<ExpertDetails> {
 
                           // Prepare the data for the API request.
                           String apiUrl =
-                              'https://vruksha-server.onrender.com/auth/verify';
+                              'https://vrukshaa-server.onrender.com/auth/verify';
                           Map<String, dynamic> body = {
                             'name': name,
                             'qualification': qualification,

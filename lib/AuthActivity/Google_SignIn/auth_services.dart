@@ -28,7 +28,7 @@ class AuthService {
         bool isNewUser = userCredential.additionalUserInfo?.isNewUser ?? false;
 
         // After Firebase authentication is successful, prepare data for the API.
-        String apiUrl = 'https://vruksha-server.onrender.com/auth/';
+        String apiUrl = 'https://vrukshaa-server.onrender.com/auth/';
         Map<String, dynamic> body = {
           'uid': _auth.currentUser?.uid,
           'providerData': _auth.currentUser?.providerData.toString(),

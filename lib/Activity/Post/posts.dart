@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:vruksha/loading_analyis.dart';
+import 'package:vruksha/Activity/Post/PostDesc.dart';
 
 class PostPage extends StatefulWidget {
   const PostPage({super.key});
@@ -96,9 +96,22 @@ class _PostPageState extends State<PostPage> {
           final responseJson = await response.stream.bytesToString();
           print('Image uploaded successfully!');
           print('Image URL: $responseJson');
-
-          // Now, send the image URL and description to your backend
           await sendToBackend(responseJson);
+          Map<String, dynamic> imageUrlMap = json.decode(responseJson);
+          String secureUrl = imageUrlMap["secure_url"];
+
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) => PostViewPage(
+                imageUrl: secureUrl,
+                diseaseName: '',
+                date: '',
+                desc: description,
+                postId: '',
+              ),
+            ),
+          );
         } else {
           print('Failed to upload image. Status code: ${response.statusCode}');
         }
@@ -109,32 +122,31 @@ class _PostPageState extends State<PostPage> {
   }
 
   Future<void> sendToBackend(String imageUrl) async {
-    // Define your backend API endpoint
-    const backendUrl = "https://vruksha-server.onrender.com/post/";
+    const backendUrl = "https://vrukshaa-server.onrender.com/post/analysis";
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String authToken = prefs.getString('authToken') ?? '';
 
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      'authToken': authToken,
+    };
+
     final data = {
       'img': imageUrl,
       'description': description,
-      'token': authToken,
     };
 
     final response = await http.post(
       Uri.parse(backendUrl),
-      headers: {
-        'Content-type': 'application/json',
-      },
+      headers: headers,
       body: jsonEncode(data),
     );
 
     if (response.statusCode == 200) {
-      // Handle a successful response from the backend
       print('Data sent to backend successfully!');
       print('Response: ${response.body}');
     } else {
-      // Handle errors when sending data to the backend
       print(
           'Failed to send data to backend. Status code: ${response.statusCode}');
     }
@@ -143,46 +155,129 @@ class _PostPageState extends State<PostPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // ... Your existing code ...
-
-      body: Container(
-        child: Center(
-          child: Column(
+      appBar: AppBar(
+        elevation: 0.0,
+        backgroundColor: Colors.white24,
+        flexibleSpace: Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // ... Your existing UI code ...
-
-              Container(
-                height: MediaQuery.of(context).size.height * 0.1,
-                width: MediaQuery.of(context).size.width * 0.9,
-                padding: EdgeInsets.all(16.0),
-                child: ElevatedButton(
-                  onPressed: isFormValid
-                      ? () async {
-                          await _uploadImageToCloudinary();
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                                  Analysis_Loading(),
-                            ),
-                          );
-                        }
-                      : null,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        isFormValid ? Colors.green.shade200 : Colors.red,
-                    padding: EdgeInsets.all(16.0),
-                  ),
-                  child: Text(
-                    'Send for Analysis',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.w200,
-                    ),
-                  ),
+              Image.asset(
+                'assets/images/vruksha_icon.png',
+                width: 40,
+                height: 40,
+              ),
+              SizedBox(width: 8.0),
+              Text(
+                'Vrukshaa',
+                style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.green.shade200,
                 ),
               ),
             ],
+          ),
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: Container(
+          child: Center(
+            child: Column(
+              children: [
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.05,
+                ),
+                Text(
+                  'Add Image of your Diseased Crop',
+                  style: TextStyle(
+                      fontStyle: FontStyle.italic,
+                      fontWeight: FontWeight.w200,
+                      color: Colors.black),
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.05,
+                ),
+                if (_imageFile == null)
+                  Container(
+                    height: MediaQuery.of(context).size.height * 0.2,
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    child: ElevatedButton(
+                      onPressed: _requestCameraPermission,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green.shade200,
+                      ),
+                      child: Icon(Icons.add),
+                    ),
+                  )
+                else
+                  Container(
+                    height: MediaQuery.of(context).size.height * 0.3,
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    child: Image.file(_imageFile),
+                  ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.05,
+                ),
+                Text(
+                  'Description:',
+                  style: TextStyle(
+                      fontStyle: FontStyle.italic,
+                      fontWeight: FontWeight.w200,
+                      color: Colors.black),
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.05,
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.green.shade200),
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  height: MediaQuery.of(context).size.height * 0.2,
+                  width: MediaQuery.of(context).size.width * 0.9,
+                  child: TextField(
+                    onChanged: (value) {
+                      setState(() {
+                        description = value;
+                        isFormValid =
+                            _imageFile != null && description.isNotEmpty;
+                      });
+                    },
+                    decoration: InputDecoration(
+                      hintText: 'Enter Description of your crop:',
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.all(16.0),
+                    ),
+                    maxLines: null,
+                  ),
+                ),
+                Container(
+                  height: MediaQuery.of(context).size.height * 0.1,
+                  width: MediaQuery.of(context).size.width * 0.9,
+                  padding: EdgeInsets.all(16.0),
+                  child: ElevatedButton(
+                    onPressed: isFormValid
+                        ? () async {
+                            await _uploadImageToCloudinary();
+                          }
+                        : null,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor:
+                          isFormValid ? Colors.green.shade200 : Colors.red,
+                      padding: EdgeInsets.all(16.0),
+                    ),
+                    child: Text(
+                      'Send for Analysis',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w200,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

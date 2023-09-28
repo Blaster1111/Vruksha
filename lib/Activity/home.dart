@@ -11,9 +11,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final diseaseName = 'HI';
   List<Map<String, dynamic>> postData = [];
-  final date = '11.11.2004';
 
   @override
   void initState() {
@@ -22,9 +20,10 @@ class _HomeState extends State<Home> {
   }
 
   Future<void> fetchDataFromBackend() async {
-    final apiUrl = 'https://vruksha-server.onrender.com/post/';
+    final apiUrl = "https://vrukshaa-server.onrender.com/post/";
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String authToken = prefs.getString('authToken') ?? '';
+    print(authToken);
 
     Map<String, String> headers = {
       'Content-Type': 'application/json',
@@ -37,16 +36,20 @@ class _HomeState extends State<Home> {
       );
 
       print(response);
+      final List<dynamic> err = await json.decode(response.body);
+      print(err);
       if (response.statusCode == 200) {
-        final List<dynamic> responseData = json.decode(response.body);
+        final List<dynamic> responseData = await json.decode(response.body);
         setState(() {
           postData = List<Map<String, dynamic>>.from(responseData);
         });
       } else {
-        print('Req Failed in status code');
+        print(response.statusCode);
+        print('reposne error: ${response}');
       }
     } catch (e) {
       print('Req Failed in url');
+      print(e);
     }
   }
 
@@ -89,6 +92,8 @@ class _HomeState extends State<Home> {
               : 'https://example.com/default_image.jpg';
           final diseaseName = post['desc'] ?? 'Unknown Disease';
 
+          final date = post['createdAt'] != null;
+
           return GestureDetector(
             onTap: () {
               Navigator.push(
@@ -97,7 +102,9 @@ class _HomeState extends State<Home> {
                   builder: (context) => PostViewPage(
                     imageUrl: imageUrl,
                     diseaseName: diseaseName,
-                    date: '11.11.2004', // You can set the date as needed
+                    desc: diseaseName,
+                    date: date.toString(),
+                    postId: post['_id'],
                   ),
                 ),
               );

@@ -44,7 +44,7 @@ class CommentCard extends StatelessWidget {
                   onPressed: onLikePressed,
                 ),
                 Text(
-                  '${likeCount} people found this helpful',
+                  '${likeCount} found this helpful',
                   style: TextStyle(
                     fontSize: 14.0,
                     color: Colors.black,

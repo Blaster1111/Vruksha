@@ -67,6 +67,8 @@ class _ProfilePageState extends State<ProfilePage> {
                         MaterialPageRoute(
                           builder: (context) => PostViewPage(
                             imageUrl: '',
+                            postId: '',
+                            desc: '',
                             diseaseName: 'Sample Disease $index',
                             date: 'Sample Date $index',
                             // Pass any other data you need to the PostViewPage here

@@ -92,7 +92,7 @@ class _OTPSignInState extends State<OTPSignIn> {
       );
       final authResult =
           await FirebaseAuth.instance.signInWithCredential(credential);
-      // Handle successful login
+
       final isNewUser = authResult.additionalUserInfo?.isNewUser ?? false;
       if (isNewUser) {
         Navigator.pushReplacement(
@@ -125,7 +125,7 @@ class _OTPSignInState extends State<OTPSignIn> {
         };
       }).toList();
 
-      final apiUrl = 'https://vruksha-server.onrender.com/auth/';
+      final apiUrl = 'https://vrukshaa-server.onrender.com/auth/';
       final headers = {
         "Content-Type": "application/json",
       };
@@ -144,13 +144,18 @@ class _OTPSignInState extends State<OTPSignIn> {
 
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
+        print(responseData);
+
         final authToken = responseData['authToken'];
+        final userId = responseData['user']['_id'];
 
         // Store the authToken in SharedPreferences
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('authToken', authToken);
+        await prefs.setString('userId', userId);
 
-        print('Auth token saved in SharedPreferences: $authToken');
+        print(
+            'Auth token and userId saved in SharedPreferences: $authToken, $userId');
       } else {
         print(
             'Failed to make the POST request. Status code: ${response.statusCode}');
