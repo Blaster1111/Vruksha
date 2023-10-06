@@ -3,9 +3,9 @@
         <uses-feature android:name="android.hardware.camera" />
         <uses-feature android:name="android.hardware.camera.autofocus" />
     <application
-        android:label="vruksha"
+        android:label="Vruksha"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/vruksha_icon">
         <activity
             android:name=".MainActivity"
             android:exported="true"

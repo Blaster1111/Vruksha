@@ -5,12 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:vruksha/AuthActivity/welcome.dart';
 import 'package:vruksha/AuthActivity/firebase_options.dart';
 import 'package:vruksha/home_page.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  FlutterNativeSplash.remove();
   runApp(const MyApp());
 }
 

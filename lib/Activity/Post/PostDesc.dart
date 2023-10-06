@@ -351,7 +351,6 @@ class _PostViewPageState extends State<PostViewPage> {
                         // Handle case when there are no comments
                         return Text('No comments available.');
                       } else {
-                        // Display comments using ListView.builder
                         final comments = snapshot.data as List<dynamic>;
                         return ListView.builder(
                           shrinkWrap: true,
@@ -369,10 +368,8 @@ class _PostViewPageState extends State<PostViewPage> {
                               description: message,
                               date: createdAt,
                               likeCount: likesCount,
-                              // Add other properties like isLiked as needed
                               onLikePressed: () {},
-                              isLiked:
-                                  false, // Assuming you need to determine if the user has liked the comment
+                              isLiked: false,
                             );
                           },
                         );
